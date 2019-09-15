@@ -58,7 +58,7 @@ public class Ressource {
 
     public void NeuerRessourcenParameterString (Parameter P, String Operator1, String SWert, String Einheit, PrintWriter PW) {
         if (RessourcenParameterVorhanden(P.GetID())){
-            PW.println("  - Ressource: " + id + " Ressourcenparameter: " + P.GetID() + " bereits vorhanden");
+            PW.println("  ++FEHLER++ Ressource: " + id + " Ressourcenparameter: " + P.GetID() + " bereits vorhanden");
         }
         else {
             // Ressourcenparameter erstellen und in Liste einhängen
@@ -70,7 +70,7 @@ public class Ressource {
     public void NeuerRessourcenParameterBoolean (Parameter P, String Operator1, boolean BWert, String Einheit, PrintWriter PW) {
 
         if (RessourcenParameterVorhanden(P.GetID())){
-            PW.println("  - Ressource: " + id + " Ressourcenparameter: " + P.GetID() + " bereits vorhanden");
+            PW.println("  ++FEHLER++ Ressource: " + id + " Ressourcenparameter: " + P.GetID() + " bereits vorhanden");
         }
         else {
             // Ressourcenparameter erstellen und in Liste einhängen
@@ -83,7 +83,7 @@ public class Ressource {
     public void NeuerRessourcenParameterDouble (Parameter P, String Operator1, double DWert1, String Operator2, double DWert2, String Einheit, PrintWriter PW) {
 
         if (RessourcenParameterVorhanden(P.GetID())){
-            PW.println("  - Ressource: " + id + " Ressourcenparameter: " + P.GetID() + " bereits vorhanden");
+            PW.println("  ++FEHLER++ Ressource: " + id + " Ressourcenparameter: " + P.GetID() + " bereits vorhanden");
         }
         else {
             // Ressourcenparameter erstellen und in Liste einhängen

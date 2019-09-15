@@ -279,7 +279,10 @@ public class Projekt {
     int idx_name = -1;
     int idx_datentyp = -1;
 
+    PWriter.println(" ");
+    PWriter.println("  ------------------------");
     PWriter.println("  Start Parameter Einlesen");
+    PWriter.println("  ------------------------");
 
     // Durchlaufen aller Zeilen und Spalten des übergebenen Parameter-Sheets
     for (Iterator<Row> rowIterator = ParameterSheet.rowIterator(); rowIterator.hasNext(); ) {
@@ -346,38 +349,46 @@ public class Projekt {
                     PWriter.println("  Falscher Zellenwert für NAME (nicht numerisch und nicht String)");
                 }
 
-                if (idx_datentyp < 0) {
-                    // Spalte mit Datentyp nicht vorhanden
-                    PWriter.println("  Spalten-Header (DATENTYP) nicht vorhanden >> Abbruch");
-                }
-                cell = row.getCell(idx_datentyp);
-                if (cell.getCellType().equals(CellType.STRING)) {
-                    Datentyp = cell.getStringCellValue();
-                } else if (cell.getCellType().equals(CellType.NUMERIC)) {
-                    Datentyp = String.valueOf(cell.getNumericCellValue());
-                } else if (cell.getCellType().equals(CellType.BLANK)) {
-                    Datentyp = "";
-                } else {
-                    PWriter.println("  Falscher Zellenwert für DATENTYP (nicht numerisch und nicht String)");
-                }
-
                 if (ID != "") {
-                    if (DatentypZulaessig(Datentyp)){
-                        if (ParameterVorhanden(ID)) {
-                            PWriter.println("  - Parameter: " + ID + " bereits vorhanden");
+                    if (Name != "") {
+                        if (idx_datentyp < 0) {
+                            // Spalte mit Datentyp nicht vorhanden
+                            PWriter.println("  Spalten-Header (DATENTYP) nicht vorhanden >> Abbruch");
+                        }
+                        cell = row.getCell(idx_datentyp);
+                        if (cell.getCellType().equals(CellType.STRING)) {
+                            Datentyp = cell.getStringCellValue();
+                        } else if (cell.getCellType().equals(CellType.NUMERIC)) {
+                            Datentyp = String.valueOf(cell.getNumericCellValue());
+                        } else if (cell.getCellType().equals(CellType.BLANK)) {
+                            Datentyp = "";
                         } else {
-                            ParameterListe.add(new Parameter (ID, Name, Datentyp));
-                            PWriter.println("  - Neuer Parameter: " + ID + " - " + Name + " - " + Datentyp);
+                            PWriter.println("  Falscher Zellenwert für DATENTYP (nicht numerisch und nicht String)");
+                        }
+
+                        if (ID != "") {
+                            if (DatentypZulaessig(Datentyp)){
+                                if (ParameterVorhanden(ID)) {
+                                    PWriter.println("  ++FEHLER++ Parameter: " + ID + " bereits vorhanden");
+                                } else {
+                                    ParameterListe.add(new Parameter (ID, Name, Datentyp));
+                                    PWriter.println("  - Neuer Parameter: " + ID + " - " + Name + " - " + Datentyp);
+                                }
+                            }
+                            else {
+                                PWriter.println("  ++FEHLER++ Falscher Wert für DATENTYP (" + Datentyp + ") >> Parameter " + ID + " nicht eingelesen!");
+                            }
                         }
                     }
                     else {
-                        PWriter.println("  Falscher Wert für DATENTYP (" + Datentyp + ") >> Abbruch");
+                        PWriter.println("  ++FEHLER++ Spalte Name nicht gefüllt >> Parameter " + ID + " nicht eingelesen!");
                     }
                 }
             }
         }
     }
     PWriter.println("  Ende  Parameter Einlesen");
+    PWriter.println("  ------------------------");
 }
 
     //----------------------------------------------------------------------------------------------------------------
@@ -398,7 +409,10 @@ public class Projekt {
         int idx_datentyp = -1;
         int idx_idparameter = -1;
 
+        PWriter.println(" ");
+        PWriter.println("  ----------------------------");
         PWriter.println("  Start Eigenschaften Einlesen");
+        PWriter.println("  ----------------------------");
 
         for (Iterator<Row> rowIterator = EigenschaftenSheet.rowIterator(); rowIterator.hasNext(); ) {
             Row row = rowIterator.next();
@@ -446,79 +460,92 @@ public class Projekt {
                         PWriter.println("  Falscher Zellenwert für ID (nicht numerisch und nicht String)");
                     }
 
-                    if (idx_name < 0) {
-                        PWriter.println("  Spalten-Header (NAME) nicht vorhanden >> Abbruch");
-                    }
-                    cell = row.getCell(idx_name);
-                    if (cell.getCellType().equals(CellType.STRING)) {
-                        Name = cell.getStringCellValue();
-                    } else if (cell.getCellType().equals(CellType.NUMERIC)) {
-                        Name = String.valueOf(cell.getNumericCellValue());
-                    } else if (cell.getCellType().equals(CellType.BLANK)) {
-                        Name = "";
-                    } else {
-                        PWriter.println("  Falscher Zellenwert für NAME (nicht numerisch und nicht String)");
-                    }
-
-                    if (idx_datentyp < 0) {
-                        PWriter.println("  Spalten-Header (DATENTYP) nicht vorhanden >> Abbruch");
-                    }
-                    cell = row.getCell(idx_datentyp);
-                    if (cell.getCellType().equals(CellType.STRING)) {
-                        Datentyp = cell.getStringCellValue();
-                    } else if (cell.getCellType().equals(CellType.NUMERIC)) {
-                        Datentyp = String.valueOf(cell.getNumericCellValue());
-                    } else if (cell.getCellType().equals(CellType.BLANK)) {
-                        Datentyp = "";
-                    } else {
-                        PWriter.println("  Falscher Zellenwert für DATENTYP (nicht numerisch und nicht String)");
-                    }
-
-                    if (DatentypZulaessig(Datentyp)){
-                        if (idx_idparameter < 0) {
-                            PWriter.println("  Spalten-Header (ID_PARAMETER) nicht vorhanden >> Abbruch");
+                    if (ID != "") {
+                        if (idx_name < 0) {
+                            PWriter.println("  Spalten-Header (NAME) nicht vorhanden >> Abbruch");
                         }
-                        cell = row.getCell(idx_idparameter);
+                        cell = row.getCell(idx_name);
                         if (cell.getCellType().equals(CellType.STRING)) {
-                            IDParameter = cell.getStringCellValue();
+                            Name = cell.getStringCellValue();
                         } else if (cell.getCellType().equals(CellType.NUMERIC)) {
-                            IDParameter = String.valueOf(cell.getNumericCellValue());
+                            Name = String.valueOf(cell.getNumericCellValue());
                         } else if (cell.getCellType().equals(CellType.BLANK)) {
-                            IDParameter = "";
+                            Name = "";
                         } else {
-                            PWriter.println("  Falscher Zellenwert für ID_PARAMETER (nicht numerisch und nicht String)");
+                            PWriter.println("  Falscher Zellenwert für NAME (nicht numerisch und nicht String)");
                         }
 
-                        if (ID != "") {
-                            if (EigenschaftVorhanden(ID)) {
-                                PWriter.println("  - Eigenschaft: " + ID + " bereits vorhanden");
+                        if (Name != "") {
+                            if (idx_datentyp < 0) {
+                                PWriter.println("  Spalten-Header (DATENTYP) nicht vorhanden >> Abbruch");
+                            }
+                            cell = row.getCell(idx_datentyp);
+                            if (cell.getCellType().equals(CellType.STRING)) {
+                                Datentyp = cell.getStringCellValue();
+                            } else if (cell.getCellType().equals(CellType.NUMERIC)) {
+                                Datentyp = String.valueOf(cell.getNumericCellValue());
+                            } else if (cell.getCellType().equals(CellType.BLANK)) {
+                                Datentyp = "";
                             } else {
-                                // Test, ob Parameter vorhanden
-                                if (ParameterVorhanden(IDParameter)) {
-                                    // Wenn Parameter vorhanden, dann  muss auch der Datentyp der Eigenschaft gleich dem Datentyp des Parameters sein
-                                    Parameter P = GetParameter (IDParameter);
-                                    String DT = P.GetDatentyp();
-                                    if (DT.equals(Datentyp)) {
-                                        EigenschaftenListe.add(new Eigenschaft (ID, Name, Datentyp, IDParameter));
-                                        PWriter.println("  - Neue Eigenschaft: " + ID + " - " + Name + " - " + Datentyp + " - " + IDParameter);
+                                PWriter.println("  Falscher Zellenwert für DATENTYP (nicht numerisch und nicht String)");
+                            }
+
+                            if (DatentypZulaessig(Datentyp)){
+                                if (idx_idparameter < 0) {
+                                    PWriter.println("  Spalten-Header (ID_PARAMETER) nicht vorhanden >> Abbruch");
+                                }
+                                cell = row.getCell(idx_idparameter);
+                                if (cell != null) {
+                                    if (cell.getCellType().equals(CellType.STRING)) {
+                                        IDParameter = cell.getStringCellValue();
+                                    } else if (cell.getCellType().equals(CellType.NUMERIC)) {
+                                        IDParameter = String.valueOf(cell.getNumericCellValue());
+                                    } else if (cell.getCellType().equals(CellType.BLANK)) {
+                                        IDParameter = "";
+                                    } else {
+                                        PWriter.println("  Falscher Zellenwert für ID_PARAMETER (nicht numerisch und nicht String)");
                                     }
-                                    else {
-                                        PWriter.println("  - Eigenschaft: " + ID + " mit Datentyp " + Datentyp + "ungleich Datentyp " + DT + "des Parameters");
+
+                                    if (ID != "") {
+                                        if (EigenschaftVorhanden(ID)) {
+                                            PWriter.println("  ++FEHLER++ Eigenschaft: " + ID + " bereits vorhanden");
+                                        } else {
+                                            // Test, ob Parameter vorhanden
+                                            if (ParameterVorhanden(IDParameter)) {
+                                                // Wenn Parameter vorhanden, dann  muss auch der Datentyp der Eigenschaft gleich dem Datentyp des Parameters sein
+                                                Parameter P = GetParameter (IDParameter);
+                                                String DT = P.GetDatentyp();
+                                                if (DT.equals(Datentyp)) {
+                                                    EigenschaftenListe.add(new Eigenschaft (ID, Name, Datentyp, IDParameter));
+                                                    PWriter.println("  - Neue Eigenschaft: " + ID + " - " + Name + " - " + Datentyp + " - " + IDParameter);
+                                                }
+                                                else {
+                                                    PWriter.println("  ++FEHLER++ Datentyp " + Datentyp + "ungleich Datentyp " + DT + "des Parameters >> Eigenschaft " + ID + " nicht eingelesen");
+                                                }
+                                            }
+                                            else {
+                                                PWriter.println("  ++FEHLER++ Parameter " + IDParameter + " nicht  vorhanden >>  Eigenschaft " + ID + " nicht eingelesen");
+                                            }
+                                        }
                                     }
                                 }
                                 else {
-                                    PWriter.println("  - Eigenschaft: " + ID + ": Parameter " + IDParameter + " nicht  vorhanden >> Abbruch");
+                                    PWriter.println("  ++FEHLER++ Falscher Zellenwert für ID_PARAMETER (nicht numerisch und nicht String) >> Eigenschaft " + ID + " nicht eingelesen");
                                 }
                             }
+                            else {
+                                PWriter.println("  ++FEHLER++ Falscher Wert für DATENTYP (" + Datentyp + ") >> Eigenschaft " + ID + " nicht eingelesen");
+                            }
                         }
-                    }
-                    else {
-                        PWriter.println("  Falscher Wert für DATENTYP (" + Datentyp + ") >> Abbruch");
+                        else {
+                            PWriter.println("  ++FEHLER++ Spalte Name nicht gefüllt >> Eigenschaft " + ID + " nicht eingelesen!");
+                        }
                     }
                 }
             }
         }
         PWriter.println("  Ende  Eigenschaften Einlesen");
+        PWriter.println("  ----------------------------");
     }
 
     //----------------------------------------------------------------------------------------------------------------
@@ -532,7 +559,10 @@ public class Projekt {
         int idx_id = -1;
         int idx_name = -1;
 
+        PWriter.println(" ");
+        PWriter.println("  -------------------------");
         PWriter.println("  Start Ressourcen Einlesen");
+        PWriter.println("  -------------------------");
 
         for (Iterator<Row> rowIterator = RessourceSheet.rowIterator(); rowIterator.hasNext(); ) {
             Row row = rowIterator.next();
@@ -579,27 +609,38 @@ public class Projekt {
                             return;
                         }
                         cell = row.getCell(idx_name);
-                        if (cell.getCellType().equals(CellType.STRING)) {
-                            Name = cell.getStringCellValue();
-                        } else if (cell.getCellType().equals(CellType.NUMERIC)) {
-                            Name = String.valueOf(cell.getNumericCellValue());
-                        } else if (cell.getCellType().equals(CellType.BLANK)) {
-                            Name = "";
-                        } else {
-                            PWriter.println("  Falscher Zellenwert für NAME (nicht numerisch und nicht String)");
-                        }
+                        if (cell != null){
+                            if (cell.getCellType().equals(CellType.STRING)) {
+                                Name = cell.getStringCellValue();
+                            } else if (cell.getCellType().equals(CellType.NUMERIC)) {
+                                Name = String.valueOf(cell.getNumericCellValue());
+                            } else if (cell.getCellType().equals(CellType.BLANK)) {
+                                Name = "";
+                            } else {
+                                PWriter.println("  ++FEHLER++ Falscher Zellenwert für NAME (nicht numerisch und nicht String) >> Ressource " + ID + " nicht eingelesen");
+                            }
 
-                        if (RessourceVorhanden(ID)) {
-                            PWriter.println("  - Ressource: " + ID + " bereits vorhanden");
-                        } else {
-                            RessourcenListe.add(new Ressource (ID, Name));
-                            PWriter.println("  - Neue Ressource: " + ID + " - " + Name);
+                            if (Name != ""){
+                                if (RessourceVorhanden(ID)) {
+                                    PWriter.println("  ++FEHLER++ Ressource: " + ID + " bereits vorhanden");
+                                } else {
+                                    RessourcenListe.add(new Ressource (ID, Name));
+                                    PWriter.println("  - Neue Ressource: " + ID + " - " + Name);
+                                }
+                            }
+                            else {
+                                PWriter.println("  ++FEHLER++ Spalte Name nicht gefüllt >> Ressource " + ID + " nicht eingelesen!");
+                            }
+                        }
+                        else {
+                            PWriter.println("  ++FEHLER++ Spalte NAME nicht gefüllt >> Ressource " + ID + " nicht eingelesen");
                         }
                     }
                 }
             }
         }
         PWriter.println("  Ende  Ressourcen Einlesen");
+        PWriter.println("  -------------------------");
     }
 
     //----------------------------------------------------------------------------------------------------------------
@@ -613,7 +654,10 @@ public class Projekt {
         int idx_id = -1;
         int idx_name = -1;
 
+        PWriter.println(" ");
+        PWriter.println("  -----------------------");
         PWriter.println("  Start Produkte Einlesen");
+        PWriter.println("  -----------------------");
 
         for (Iterator<Row> rowIterator = ProdukteSheet.rowIterator(); rowIterator.hasNext(); ) {
             Row row = rowIterator.next();
@@ -660,27 +704,33 @@ public class Projekt {
                             PWriter.println("  Spalten-Header (NAME) nicht vorhanden >> Abbruch");
                         }
                         cell = row.getCell(idx_name);
-                        if (cell.getCellType().equals(CellType.STRING)) {
-                            Name = cell.getStringCellValue();
-                        } else if (cell.getCellType().equals(CellType.NUMERIC)) {
-                            Name = String.valueOf(cell.getNumericCellValue());
-                        } else if (cell.getCellType().equals(CellType.BLANK)) {
-                            Name = "";
-                        } else {
-                            PWriter.println("  Falscher Zellenwert für NAME (nicht numerisch und nicht String)");
-                        }
+                        if (cell != null){
+                            if (cell.getCellType().equals(CellType.STRING)) {
+                                Name = cell.getStringCellValue();
+                            } else if (cell.getCellType().equals(CellType.NUMERIC)) {
+                                Name = String.valueOf(cell.getNumericCellValue());
+                            } else if (cell.getCellType().equals(CellType.BLANK)) {
+                                Name = "";
+                            } else {
+                                PWriter.println("  ++FEHLER++ Falscher Zellenwert für NAME (nicht numerisch und nicht String) >> Produkt " + ID + " nicht eingelesen");
+                            }
 
-                        if (ProduktVorhanden(ID)) {
-                            PWriter.println("  - Produkt: " + ID + " bereits vorhanden");
-                        } else {
-                            ProduktListe.add(new Produkt (ID, Name));
-                            PWriter.println("  - Neue Produkt: " + ID + " - " + Name);
+                            if (ProduktVorhanden(ID)) {
+                                PWriter.println("  ++FEHLER++ Produkt: " + ID + " bereits vorhanden");
+                            } else {
+                                ProduktListe.add(new Produkt (ID, Name));
+                                PWriter.println("  - Neue Produkt: " + ID + " - " + Name);
+                            }
+                        }
+                        else {
+                            PWriter.println("  ++FEHLER++ Spalte NAME nicht gefüllt >> Produkt " + ID + " nicht eingelesen");
                         }
                     }
                 }
             }
         }
         PWriter.println("  Ende  Produkte Einlesen");
+        PWriter.println("  -----------------------");
     }
 
     //----------------------------------------------------------------------------------------------------------------
@@ -708,7 +758,10 @@ public class Projekt {
         int idx_wert2 = -1;
         int idx_einheit = -1;
 
+        PWriter.println(" ");
+        PWriter.println("  ----------------------------------");
         PWriter.println("  Start Ressourcenparameter Einlesen");
+        PWriter.println("  ----------------------------------");
 
         for (Iterator<Row> rowIterator = RessourcenparameterSheet.rowIterator(); rowIterator.hasNext(); ) {
             Row row = rowIterator.next();
@@ -777,185 +830,204 @@ public class Projekt {
                                 return;
                             }
                             cell = row.getCell(idx_idparameter);
-                            if (cell.getCellType().equals(CellType.STRING)) {
-                                IDParameter = cell.getStringCellValue();
-                            } else if (cell.getCellType().equals(CellType.NUMERIC)) {
-                                IDParameter = String.valueOf(cell.getNumericCellValue());
-                            } else if (cell.getCellType().equals(CellType.BLANK)) {
-                                IDParameter = "";
-                            } else {
-                                PWriter.println("  Falscher Zellenwert für ID_PARAMETER (nicht numerisch und nicht String)");
-                            }
-
-                            // Prüfen, ob der Parameter vorhanden ist
-                            Parameter P = GetParameter(IDParameter);
-                            if (P != null){
-                                // restliche Daten einlesen ....
-                                // Operator1 lesen
-                                if (idx_operator1 < 0) {
-                                    PWriter.println("  Spalten-Header (OPERATOR1) nicht vorhanden >> Abbruch");
-                                }
-                                cell = row.getCell(idx_operator1);
+                            if (cell != null) {
                                 if (cell.getCellType().equals(CellType.STRING)) {
-                                    Operator1 = cell.getStringCellValue();
+                                    IDParameter = cell.getStringCellValue();
                                 } else if (cell.getCellType().equals(CellType.NUMERIC)) {
-                                    Operator1 = String.valueOf(cell.getNumericCellValue());
+                                    IDParameter = String.valueOf(cell.getNumericCellValue());
                                 } else if (cell.getCellType().equals(CellType.BLANK)) {
-                                    Operator1 = "";
+                                    IDParameter = "";
                                 } else {
-                                    PWriter.println("  Falscher Zellenwert für OPERATOR1 (nicht numerisch und nicht String)");
+                                    PWriter.println("  Falscher Zellenwert für ID_PARAMETER (nicht numerisch und nicht String)");
                                 }
 
-                                // Operator 1 muss immer gefüllt sein.
-                                if (Operator1 != ""){
-                                    if (OperatorZulaessig(Operator1) == false){
-                                        PWriter.println("  OPERATOR1 hat einen unzulässigen Wert. >> Abbruch");
-                                        return;
+                                // Prüfen, ob der Parameter vorhanden ist
+                                Parameter P = GetParameter(IDParameter);
+                                if (P != null){
+                                    // restliche Daten einlesen ....
+                                    // Operator1 lesen
+                                    if (idx_operator1 < 0) {
+                                        PWriter.println("  Spalten-Header (OPERATOR1) nicht vorhanden >> Abbruch");
                                     }
-                                }
-                                else {
-                                    PWriter.println("  OPERATOR1 ist nicht gefüllt, muss aber immer einen Wert haben >> Abbruch");
-                                    return;
-                                }
+                                    cell = row.getCell(idx_operator1);
+                                    if (cell != null) {
+                                        if (cell.getCellType().equals(CellType.STRING)) {
+                                            Operator1 = cell.getStringCellValue();
+                                        } else if (cell.getCellType().equals(CellType.NUMERIC)) {
+                                            Operator1 = String.valueOf(cell.getNumericCellValue());
+                                        } else if (cell.getCellType().equals(CellType.BLANK)) {
+                                            Operator1 = "";
+                                        } else {
+                                            PWriter.println("  ++FEHLER++ Falscher Zellenwert für OPERATOR1 (nicht numerisch und nicht String) >> Ressourcenparameter " + IDParameter + " für Ressource " + IDRessource + " nicht eingelesen");
+                                            continue;
+                                        }
 
-                                // Operator2 lesen
-                                if (idx_operator2 < 0) {
-                                    PWriter.println("  Spalten-Header (OPERATOR2) nicht vorhanden >> Abbruch");
-                                    return;
-                                }
-                                cell = row.getCell(idx_operator2);
-                                if (cell.getCellType().equals(CellType.STRING)) {
-                                    Operator2 = cell.getStringCellValue();
-                                } else if (cell.getCellType().equals(CellType.NUMERIC)) {
-                                    Operator2 = String.valueOf(cell.getNumericCellValue());
-                                } else if (cell.getCellType().equals(CellType.BLANK)) {
-                                    Operator2 = "";
-                                } else {
-                                    PWriter.println("  Falscher Zellenwert für OPERATOR2 (nicht numerisch und nicht String)");
-                                    return;
-                                }
-
-                                // Operator 2 kann auch leer sein. Wenn gefüllt, dann muss der Operator zulässig sein
-                                if (Operator2 != ""){
-                                    if (OperatorZulaessig(Operator2) == false){
-                                        PWriter.println("  OPERATOR2 hat einen unzulässigen Wert. >> Abbruch");
-                                        return;
-                                    }
-                                }
-
-                                // Einheit lesen
-                                if (idx_einheit < 0) {
-                                    PWriter.println("  Spalten-Header (EINHEIT) nicht vorhanden >> Abbruch");
-                                }
-                                cell = row.getCell(idx_einheit);
-                                if (cell != null) {
-                                    if (cell.getCellType().equals(CellType.STRING)) {
-                                        Einheit = cell.getStringCellValue();
-                                    } else if (cell.getCellType().equals(CellType.NUMERIC)) {
-                                        Einheit = String.valueOf(cell.getNumericCellValue());
-                                    } else if (cell.getCellType().equals(CellType.BLANK)) {
-                                        Einheit = "";
-                                    } else {
-                                        PWriter.println("  Falscher Zellenwert für EINHEIT (nicht numerisch und nicht String)");
-                                    }
-                                }
-                                else {
-                                    Einheit = "";
-                                }
-
-                                // Wert 1 einlesen
-                                // Abhängig vom Datentyp des Parameters unterschiedliche Varianten ...
-                                if (P.GetDatentyp().equals(DATENTYP_String)){
-                                    if (idx_wert1 < 0) {
-                                        PWriter.println("  Spalten-Header (WERT1) nicht vorhanden >> Abbruch");
-                                        return;
-                                    }
-                                    cell = row.getCell(idx_wert1);
-                                    if (cell.getCellType().equals(CellType.STRING)) {
-                                        SWert = cell.getStringCellValue();
-                                    } else if (cell.getCellType().equals(CellType.NUMERIC)) {
-                                        SWert = String.valueOf(cell.getNumericCellValue());
-                                    } else if (cell.getCellType().equals(CellType.BLANK)) {
-                                        SWert = "";
-                                    } else {
-                                        PWriter.println("  Falscher Zellenwert für SWERT1 (nicht numerisch und nicht String)");
-                                        return;
-                                    }
-
-                                    // Ressourcenparameter anlegen
-                                    R.NeuerRessourcenParameterString(P, Operator1, SWert, Einheit, PWriter);
-                                }
-                                else if (P.GetDatentyp().equals(DATENTYP_Boolean)){
-                                    if (idx_wert1 < 0) {
-                                        PWriter.println("  Spalten-Header (WERT1) nicht vorhanden >> Abbruch");
-                                        return;
-                                    }
-                                    cell = row.getCell(idx_wert1);
-                                    if (cell.getCellType().equals(CellType.BOOLEAN)) {
-                                        BWert = cell.getBooleanCellValue();
-                                    } else if (cell.getCellType().equals(CellType.NUMERIC)) {
-                                        int inthelp = (int)cell.getNumericCellValue();
-                                        if (inthelp == 0) {
-                                            BWert = false;
+                                        // Operator 1 muss immer gefüllt sein.
+                                        if (Operator1 != ""){
+                                            if (OperatorZulaessig(Operator1) == false){
+                                                PWriter.println("  ++FEHLER++ Operator1 hat einen unzulässigen Wert: " + Operator1 + " >> Ressourcenparameter " + IDParameter + " für Ressource " + IDRessource + " nicht eingelesen");
+                                                continue;
+                                            }
                                         }
                                         else {
-                                            BWert = true;
+                                            PWriter.println("  ++FEHLER++ Spalte Operator1 nicht gefüllt >> Ressourcenparameter " + IDParameter + " für Ressource " + IDRessource + " nicht eingelesen");
+                                            continue;
                                         }
-                                    } else {
-                                        PWriter.println("  Falscher Zellenwert für WERT1 (nicht boolean)");
-                                        return;
-                                    }
 
-                                    // Ressourcenparameter erstellen
-                                    R.NeuerRessourcenParameterBoolean(P, Operator1, BWert, Einheit, PWriter);
+                                        // Operator2 lesen
+                                        if (idx_operator2 < 0) {
+                                            PWriter.println("  Spalten-Header (OPERATOR2) nicht vorhanden >> Abbruch");
+                                            return;
+                                        }
+                                        cell = row.getCell(idx_operator2);
+                                        if (cell != null) {
+                                            if (cell.getCellType().equals(CellType.STRING)) {
+                                                Operator2 = cell.getStringCellValue();
+                                            } else if (cell.getCellType().equals(CellType.NUMERIC)) {
+                                                Operator2 = String.valueOf(cell.getNumericCellValue());
+                                            } else if (cell.getCellType().equals(CellType.BLANK)) {
+                                                Operator2 = "";
+                                            } else {
+                                                PWriter.println("  Falscher Zellenwert für OPERATOR2 (nicht numerisch und nicht String)");
+                                                return;
+                                            }
+                                        }
+                                        else {
+                                            Operator2 = "";
+                                        }
+
+                                        // Operator 2 kann auch leer sein. Wenn gefüllt, dann muss der Operator zulässig sein
+                                        if (Operator2 != ""){
+                                            if (OperatorZulaessig(Operator2) == false){
+                                                PWriter.println("  ++FEHLER++ Operator2 hat einen unzulässigen Wert: " + Operator2 + " >> Ressourcenparameter " + IDParameter + " für Ressource " + IDRessource + " nicht eingelesen");
+                                                continue;
+                                            }
+                                        }
+
+                                        // Einheit lesen
+                                        if (idx_einheit < 0) {
+                                            PWriter.println("  Spalten-Header (EINHEIT) nicht vorhanden >> Abbruch");
+                                        }
+                                        cell = row.getCell(idx_einheit);
+                                        if (cell != null) {
+                                            if (cell.getCellType().equals(CellType.STRING)) {
+                                                Einheit = cell.getStringCellValue();
+                                            } else if (cell.getCellType().equals(CellType.NUMERIC)) {
+                                                Einheit = String.valueOf(cell.getNumericCellValue());
+                                            } else if (cell.getCellType().equals(CellType.BLANK)) {
+                                                Einheit = "";
+                                            } else {
+                                                PWriter.println("  Falscher Zellenwert für EINHEIT (nicht numerisch und nicht String)");
+                                            }
+                                        }
+                                        else {
+                                            Einheit = "";
+                                        }
+
+                                        // Wert 1 einlesen
+                                        // Abhängig vom Datentyp des Parameters unterschiedliche Varianten ...
+                                        if (P.GetDatentyp().equals(DATENTYP_String)){
+                                            if (idx_wert1 < 0) {
+                                                PWriter.println("  Spalten-Header (WERT1) nicht vorhanden >> Abbruch");
+                                                return;
+                                            }
+                                            cell = row.getCell(idx_wert1);
+                                            if (cell.getCellType().equals(CellType.STRING)) {
+                                                SWert = cell.getStringCellValue();
+                                            } else if (cell.getCellType().equals(CellType.NUMERIC)) {
+                                                SWert = String.valueOf(cell.getNumericCellValue());
+                                            } else if (cell.getCellType().equals(CellType.BLANK)) {
+                                                SWert = "";
+                                            } else {
+                                                PWriter.println("  ++FEHLER++ Spalte Wert1 hat falschen Typ (nicht String) >> Ressourcenparameter " + IDParameter + " für Ressource " + IDRessource + " nicht eingelesen");
+                                                continue;
+                                            }
+
+                                            // Ressourcenparameter anlegen
+                                            R.NeuerRessourcenParameterString(P, Operator1, SWert, Einheit, PWriter);
+                                        }
+                                        else if (P.GetDatentyp().equals(DATENTYP_Boolean)){
+                                            if (idx_wert1 < 0) {
+                                                PWriter.println("  Spalten-Header (WERT1) nicht vorhanden >> Abbruch");
+                                                return;
+                                            }
+                                            cell = row.getCell(idx_wert1);
+                                            if (cell.getCellType().equals(CellType.BOOLEAN)) {
+                                                BWert = cell.getBooleanCellValue();
+                                            } else if (cell.getCellType().equals(CellType.NUMERIC)) {
+                                                int inthelp = (int)cell.getNumericCellValue();
+                                                if (inthelp == 0) {
+                                                    BWert = false;
+                                                }
+                                                else {
+                                                    BWert = true;
+                                                }
+                                            } else {
+                                                PWriter.println("  ++FEHLER++ Spalte Wert1 hat falschen Typ (nicht Boolean) >> Ressourcenparameter " + IDParameter + " für Ressource " + IDRessource + " nicht eingelesen");
+                                                continue;
+                                            }
+
+                                            // Ressourcenparameter erstellen
+                                            R.NeuerRessourcenParameterBoolean(P, Operator1, BWert, Einheit, PWriter);
+                                        }
+                                        else if (P.GetDatentyp().equals(DATENTYP_Double) || P.GetDatentyp().equals(DATENTYP_Integer)){
+                                            if (idx_wert1 < 0) {
+                                                PWriter.println("  Spalten-Header (WERT1) nicht vorhanden >> Abbruch");
+                                                return;
+                                            }
+                                            cell = row.getCell(idx_wert1);
+                                            if (cell.getCellType().equals(CellType.NUMERIC)) {
+                                                DWert1 = cell.getNumericCellValue();
+                                            } else {
+                                                PWriter.println("  ++FEHLER++ Spalte Wert1 hat falschen Typ (nicht numerisch) >> Ressourcenparameter " + IDParameter + " für Ressource " + IDRessource + " nicht eingelesen");
+                                                continue;
+                                            }
+
+                                            if (Operator2 != "") {
+                                                // Für Intervalle
+                                                // Wenn Operator 2 gefüllt ist, dann muss auch Wert 2 eingelesen werden.
+                                                if (idx_wert2 < 0) {
+                                                    PWriter.println("  Spalten-Header (WERT2) nicht vorhanden >> Abbruch");
+                                                    return;
+                                                }
+                                                cell = row.getCell(idx_wert2);
+                                                if (cell != null) {
+                                                    PWriter.println("  ++FEHLER++ Spalte Wert2 hat falschen Typ (nicht numerisch) >> Ressourcenparameter " + IDParameter + " für Ressource " + IDRessource + " nicht eingelesen");
+                                                    continue;
+                                                }
+                                                if (cell.getCellType().equals(CellType.NUMERIC)) {
+                                                    DWert2 = cell.getNumericCellValue();
+                                                } else {
+                                                    PWriter.println("  ++FEHLER++ Spalte Wert2 hat falschen Typ (nicht numerisch) >> Ressourcenparameter " + IDParameter + " für Ressource " + IDRessource + " nicht eingelesen");
+                                                    continue;
+                                                }
+                                            }
+
+                                            // Ressourcenparameter erstellen
+                                            R.NeuerRessourcenParameterDouble(P, Operator1, DWert1, Operator2, DWert2, Einheit, PWriter);
+                                        }
+                                    }
+                                    else {
+                                        PWriter.println("  ++FEHLER++ Spalte Operator1 nicht gefüllt >> Ressourcenparameter " + IDParameter + " für Ressource " + IDRessource + " nicht eingelesen");
+                                    }
                                 }
-                                else if (P.GetDatentyp().equals(DATENTYP_Double) || P.GetDatentyp().equals(DATENTYP_Integer)){
-                                    if (idx_wert1 < 0) {
-                                        PWriter.println("  Spalten-Header (WERT1) nicht vorhanden >> Abbruch");
-                                        return;
-                                    }
-                                    cell = row.getCell(idx_wert1);
-                                    if (cell.getCellType().equals(CellType.NUMERIC)) {
-                                        DWert1 = cell.getNumericCellValue();
-                                    } else {
-                                        PWriter.println("  Falscher Zellenwert für DWERT1 (nicht numerisch)");
-                                        return;
-                                    }
-
-                                    if (Operator2 != "") {
-                                        // Für Intervalle
-                                        // Wenn Operator 2 gefüllt ist, dann muss auch Wert 2 eingelesen werden.
-                                        if (idx_wert2 < 0) {
-                                            PWriter.println("  Spalten-Header (WERT2) nicht vorhanden >> Abbruch");
-                                            return;
-                                        }
-                                        cell = row.getCell(idx_wert2);
-                                        if (cell.getCellType().equals(CellType.NUMERIC)) {
-                                            DWert2 = cell.getNumericCellValue();
-                                        } else {
-                                            PWriter.println("  Falscher Zellenwert für DWERT2 (nicht numerisch)");
-                                            return;
-                                        }
-                                    }
-
-                                    // Ressourcenparameter erstellen
-                                    R.NeuerRessourcenParameterDouble(P, Operator1, DWert1, Operator2, DWert2, Einheit, PWriter);
+                                else {
+                                    PWriter.println("  ++FEHLER++ Parameter " + IDParameter +  " nicht in Parameterliste vorhanden  >> Ressourcenparameter für Ressource " + IDRessource + " nicht eingelesen");
                                 }
                             }
                             else {
-                                PWriter.println("  Parameter " + IDParameter + " nicht vorhanden. >> Abbruch");
-                                return;
+                                PWriter.println("  ++FEHLER++ Spalte ID_PARAMETER nicht gefüllt >> Ressourcenparameter für Ressource " + IDRessource + " nicht eingelesen");
                             }
                         }
                         else {
-                            PWriter.println("  Ressource " + IDRessource + " nicht vorhanden. >> Abbruch");
-                            return;
+                            PWriter.println("  ++FEHLER++ Ressource " + IDRessource + " nicht vorhanden. >> Ressourcenparameter nicht eingelesen");
                         }
                     }
                 }
             }
         }
         PWriter.println("  Ende  Ressourcenparameter Einlesen");
+        PWriter.println("  ----------------------------------");
     }
 
     //----------------------------------------------------------------------------------------------------------------
@@ -977,7 +1049,10 @@ public class Projekt {
         int idx_einheit = -1;
         int idx_wert = -1;
 
+        PWriter.println(" ");
+        PWriter.println("  ---------------------------------");
         PWriter.println("  Start Produkteigenschaft Einlesen");
+        PWriter.println("  ---------------------------------");
 
         for (Iterator<Row> rowIterator = ProdukteigenschaftenSheet.rowIterator(); rowIterator.hasNext(); ) {
             Row row = rowIterator.next();
@@ -1041,6 +1116,11 @@ public class Projekt {
                                 return;
                             }
                             cell = row.getCell(idx_idressource);
+                            if (cell == null) {
+                                IDRessource = "";
+                                PWriter.println("  ++FEHLER++ Ressource " + IDRessource + " nicht vorhanden. >> Produkteigenschaft für Produkt " + IDProdukt + " nicht eingelesen");
+                                continue;
+                            }
                             if (cell.getCellType().equals(CellType.STRING)) {
                                 IDRessource = cell.getStringCellValue();
                             } else if (cell.getCellType().equals(CellType.NUMERIC)) {
@@ -1111,8 +1191,8 @@ public class Projekt {
                                                 } else if (cell.getCellType().equals(CellType.BLANK)) {
                                                     SWert = "";
                                                 } else {
-                                                    PWriter.println("  Falscher Zellenwert für WERT (nicht numerisch und nicht String)");
-                                                    return;
+                                                    PWriter.println("  ++FEHLER++ Spalte Wert hat falschen Typ (nicht String) >> Produkteigenschaft für Produkt " + IDProdukt + " und Eigenschaft " + IDEigenschaft + " für Ressource " + IDRessource + " nicht eingelesen");
+                                                    continue;
                                                 }
 
                                                 // Produkteigenschaft erstellen
@@ -1137,8 +1217,8 @@ public class Projekt {
                                                         BWert = true;
                                                     }
                                                 } else {
-                                                    PWriter.println("  Falscher Zellenwert für WERT (nicht boolean)");
-                                                    return;
+                                                    PWriter.println("  ++FEHLER++ Spalte Wert hat falschen Typ (nicht Boolean) >> Produkteigenschaft für Produkt " + IDProdukt + " und Eigenschaft " + IDEigenschaft + " für Ressource " + IDRessource + " nicht eingelesen");
+                                                    continue;
                                                 }
 
                                                 // Produkteigenschaft erstellen
@@ -1154,8 +1234,8 @@ public class Projekt {
                                             if (cell.getCellType().equals(CellType.NUMERIC)) {
                                                 DWert = cell.getNumericCellValue();
                                             } else {
-                                                PWriter.println("  Falscher Zellenwert für WERT (nicht numerisch)");
-                                                return;
+                                                PWriter.println("  ++FEHLER++ Spalte Wert hat falschen Typ (nicht numerisch) >> Produkteigenschaft für Produkt " + IDProdukt + " und Eigenschaft " + IDEigenschaft + " für Ressource " + IDRessource + " nicht eingelesen");
+                                                continue;
                                             }
 
                                             // Produkteigenschaft erstellen
@@ -1164,28 +1244,30 @@ public class Projekt {
 
                                     }
                                     else {
-                                        PWriter.println("  Eigenschaft: " + IDEigenschaft + "  Fehlender Parameter " + E.GetIDParameter() + " bei Ressource " + R.GetID() + " >> Produkteigenschaft nicht eingelesen!");
+                                        PWriter.println("  ++FEHLER++ Eigenschaft: " + IDEigenschaft + "  Fehlender Parameter " + E.GetIDParameter() + " bei Ressource " + R.GetID() + " >> Produkteigenschaft für Produkt " + IDProdukt + " nicht eingelesen!");
+                                        continue;
                                     }
                                 }
                                 else {
-                                    PWriter.println("  Eigenschaft " + IDEigenschaft + " nicht vorhanden. >> Abbruch");
-                                    return;
+                                    PWriter.println("  ++FEHLER++ Eigenschaft " + IDEigenschaft + " nicht vorhanden. >> Produkteigenschaft für Produkt " + IDProdukt + " nicht eingelesen");
+                                    continue;
                                 }
                             }
                             else {
-                                PWriter.println("  Ressource " + IDRessource + " nicht vorhanden. >> Abbruch");
-                                return;
+                                PWriter.println("  ++FEHLER++ Ressource " + IDRessource + " nicht vorhanden. >> Produkteigenschaft für Produkt " + IDProdukt + " nicht eingelesen");
+                                continue;
                             }
                         }
                         else {
-                            PWriter.println("  Prodsukt " + IDProdukt + " nicht vorhanden. >> Abbruch");
-                            return;
+                            PWriter.println("  ++FEHLER++ Produkt " + IDProdukt + " nicht vorhanden. >> Produkteigenschaft nicht eingelesen");
+                            continue;
                         }
                     }
                 }
             }
         }
         PWriter.println("  Ende  Produkteigenschaft Einlesen");
+        PWriter.println("  ---------------------------------");
     }
 
     //----------------------------------------------------------------------------------------------------------------
@@ -1198,7 +1280,10 @@ public class Projekt {
         JFileChooser RessourcenDatei = new JFileChooser();
         int returnValue = RessourcenDatei.showOpenDialog(null);
 
+        PWriter.println(" ");
+        PWriter.println("---------------------------------------------------------------------------");
         PWriter.println("Start Daten einlesen");
+        PWriter.println("---------------------------------------------------------------------------");
 
         if (returnValue == JFileChooser.APPROVE_OPTION) {
             try {
@@ -1227,7 +1312,9 @@ public class Projekt {
             }
         }
 
+        PWriter.println(" ");
         PWriter.println("Ende  Daten einlesen");
+        PWriter.println("---------------------------------------------------------------------------");
     }
 
     //----------------------------------------------------------------------------------------------------------------
@@ -1238,7 +1325,10 @@ public class Projekt {
 
     public void ParameterVergleichen() throws IOException{
 
+        PWriter.println(" ");
+        PWriter.println("---------------------------------------------------------------------------");
         PWriter.println("Start ParameterVergleichen");
+        PWriter.println("---------------------------------------------------------------------------");
 
         // Alle eingelesenen Produkte betrachten
         for(int num=0; num<ProduktListe.size(); num++) {
@@ -1246,19 +1336,24 @@ public class Projekt {
             boolean testergebnis = true;
 
             Produkt P = (Produkt)ProduktListe.get(num);
-            PWriter.println("Produkt: " + P.GetName() + P.GetID());
+            PWriter.println(" ");
+            PWriter.println("Produkt: " + P.GetName() + " Parameter: " + P.GetID());
 
             // Jetzt für das Produkt alle Produkteigenschaften prüfen ...
             testergebnis = P.ProduktEigenschaftenPruefen(PWriter);
 
             if (testergebnis){
-                PWriter.println("Produkt: " + P.GetName() + " " + P.GetID() + "   OK");
+                PWriter.println("Produkt: " + P.GetName() + " Parameter: " + P.GetID() + "   OK");
             }
             else {
-                PWriter.println("Produkt: " + P.GetName() + " " + P.GetID() + "   NICHT OK");
+                PWriter.println("Produkt: " + P.GetName() + " Parameter: " + P.GetID() + "   NICHT OK");
             }
         }
+
+        PWriter.println(" ");
+        PWriter.println("---------------------------------------------------------------------------");
         PWriter.println("Ende  ParameterVergleichen");
+        PWriter.println("---------------------------------------------------------------------------");
     }
 
     //Methode zum Ausgeben der gespeicherten Vergleichsdaten in der Konsole zum Testen
