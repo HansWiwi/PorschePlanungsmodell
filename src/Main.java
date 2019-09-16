@@ -24,8 +24,8 @@ public class Main {
         P.ParameterVergleichen();
         P.finalize();
         P.DatenAusgeben();
+        P.AusgabeDateiErzeugen();
 
-        System.out.println("Test GitHub");
 
         }
 }

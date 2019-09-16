@@ -4,6 +4,7 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import javax.swing.*;
 import java.io.*;
 import java.util.*;
+import java.io.FileOutputStream;
 
 public class Projekt {
     //----------------------------------------------------------------------------------------------------------------
@@ -647,6 +648,7 @@ public class Projekt {
     // Liest die Produkte aus dem übergebenen Excel-Tabsheet in die Produkt-Liste ein
     // Doppelte Produkte werden nicht der Liste hinzugefügt
     //----------------------------------------------------------------------------------------------------------------
+
 
     public void ProdukteEinlesen (Sheet ProdukteSheet) {
         String ID = "";
@@ -1366,11 +1368,69 @@ public class Projekt {
             for(int num2=0; num2<P.GetProdukteigenschaftenliste().size(); num2++) {
                 Produkteigenschaft PE = (Produkteigenschaft) P.GetProdukteigenschaftenliste().get(num2);
                 System.out.println("  - Die Produkteigenschaft " + P.GetProdukteigenschaftenliste().get(num2).GetEigenschaftName() + " des Produktes " + P.GetName() + " mit der ID " + P.GetProdukteigenschaftenliste().get(num2).GetEigenschaftID() + " ist " + P.GetProdukteigenschaftenliste().get(num2).getIstErfuellt());
-                if (P.GetProdukteigenschaftenliste().get(num2).GetReferenzAufRessourcenParameter().GetReferenzAufParameter().GetDatentyp().equals("Double")){
+                if (PE.GetReferenzAufRessourcenParameter().GetReferenzAufParameter().GetDatentyp().equals("Double")){
                     System.out.println("    - Die Differenz beträgt " + P.GetProdukteigenschaftenliste().get(num2).getDifferenz());
                 }
             }
         }
 
     }
+
+    public void AusgabeDateiErzeugen() throws IOException{
+        Workbook workbook = new XSSFWorkbook();
+        Sheet sheet = workbook.createSheet("Vergleichsergebnis");
+        Row rowÜberschriften = sheet.createRow(0);
+        rowÜberschriften.createCell(0).setCellValue("Produkt Name");                    //Spalte A
+        rowÜberschriften.createCell(1).setCellValue("Produkt ID");                      //Spalte B
+        rowÜberschriften.createCell(2).setCellValue("Eigenschaft Name");                //Spalte C
+        rowÜberschriften.createCell(3).setCellValue("Eigenschaft ID");                  //Spalte D
+        rowÜberschriften.createCell(4).setCellValue("Produkteigenschaft Wert");         //Spalte E
+        rowÜberschriften.createCell(5).setCellValue("Produkteigenschaft Einheit");      //Spalte F
+        rowÜberschriften.createCell(6).setCellValue("Ressource Name");                  //Spalte G
+        rowÜberschriften.createCell(7).setCellValue("Ressource ID");                    //Spalte H
+        rowÜberschriften.createCell(8).setCellValue("Parameter Name");                  //Spalte I
+        rowÜberschriften.createCell(9).setCellValue("Parameter ID");                    //Spalte J
+        rowÜberschriften.createCell(10).setCellValue("Ressourcenparameter Wert");       //Spalte K
+        rowÜberschriften.createCell(11).setCellValue("Ressourcenparameter Einheit");    //Spalte L
+        rowÜberschriften.createCell(12).setCellValue("Vergleichsergebnis");             //Spalte M
+        rowÜberschriften.createCell(13).setCellValue("Differenz");                      //Spalte N
+
+
+        for(int num=0; num<ProduktListe.size(); num++) {
+            Produkt P = (Produkt)ProduktListe.get(num);
+
+            for(int num2=0; num2<P.GetProdukteigenschaftenliste().size(); num2++) {
+                Produkteigenschaft PE = (Produkteigenschaft) P.GetProdukteigenschaftenliste().get(num2);
+
+                Row rowEinzelneZeilen = sheet.createRow(num + num2 + num + 1);
+
+                rowEinzelneZeilen.createCell(0).setCellValue(P.GetName());                                                                  //Spalte A
+                rowEinzelneZeilen.createCell(1).setCellValue(P.GetID());                                                                    //Spalte B
+                rowEinzelneZeilen.createCell(2).setCellValue(PE.GetEigenschaftName());                                                      //Spalte C
+                rowEinzelneZeilen.createCell(3).setCellValue(PE.GetEigenschaftID());                                                        //Spalte D
+                rowEinzelneZeilen.createCell(4).setCellValue(PE.GetDWert1());                                      //Spalte E
+                rowEinzelneZeilen.createCell(5).setCellValue(PE.GetEinheit());                                                              //Spalte F
+                rowEinzelneZeilen.createCell(6).setCellValue(PE.GetReferenzAufRessource().GetName());                                       //Spalte G
+                rowEinzelneZeilen.createCell(7).setCellValue(PE.GetReferenzAufRessource().GetID());                                         //Spalte H
+                rowEinzelneZeilen.createCell(8).setCellValue(PE.GetReferenzAufRessourcenParameter().GetReferenzAufParameter().GetName());   //Spalte I
+                rowEinzelneZeilen.createCell(9).setCellValue(PE.GetReferenzAufRessourcenParameter().GetReferenzAufParameter().GetID());     //Spalte J
+                rowEinzelneZeilen.createCell(10).setCellValue(PE.GetReferenzAufRessourcenParameter().GetDWert1());                          //Spalte K
+                rowEinzelneZeilen.createCell(11).setCellValue(PE.GetReferenzAufRessourcenParameter().GetEinheit());                         //Spalte L
+                rowEinzelneZeilen.createCell(12).setCellValue(PE.getIstErfuellt());                                                         //Spalte M
+                rowEinzelneZeilen.createCell(13).setCellValue(PE.getDifferenz());                                                           //Spalte N
+            }
+        }
+
+
+        try {
+
+            FileOutputStream output = new FileOutputStream("Ergebnis Datei.xlsx");
+            workbook.write(output);
+            output.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
 }

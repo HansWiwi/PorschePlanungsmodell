@@ -121,4 +121,10 @@ public class Produkteigenschaft {
     public Ressourcenparameter GetReferenzAufRessourcenParameter() {
         return this.referenzAufRessourcenParameter;
     }
+
+    public Ressource GetReferenzAufRessource() { return this.referenzAufRessource; }
+
+    public String GetEinheit() { return this.einheit;}
+
+    public double GetDWert1() { return this.dwert;}
 }

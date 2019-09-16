@@ -181,4 +181,7 @@ public class Ressourcenparameter {
         return this.referenzAufParameter;
     }
 
+    public double GetDWert1() { return this.dwert1; }
+
+    public String GetEinheit() { return this.einheit; }
 }

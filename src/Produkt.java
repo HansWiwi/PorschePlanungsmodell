@@ -43,7 +43,6 @@ public class Produkt {
 
     public String GetName() { return this.name;}
 
-    //Test
     public LinkedList<Produkteigenschaft> GetProdukteigenschaftenliste(){ return this.ProduktEigenschaftenListe;}
 
     private boolean ProduktEigenschaftVorhanden(String IDRessource, String IDEigenschaft){
