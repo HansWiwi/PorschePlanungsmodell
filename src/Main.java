@@ -25,6 +25,8 @@ public class Main {
         P.finalize();
         P.DatenAusgeben();
 
+        System.out.println("Test GitHub");
+
         }
 }
 
