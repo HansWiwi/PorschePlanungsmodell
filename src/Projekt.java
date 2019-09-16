@@ -978,6 +978,10 @@ public class Projekt {
                                                 return;
                                             }
                                             cell = row.getCell(idx_wert1);
+                                            if (cell == null) {
+                                                PWriter.println("  ++FEHLER++ Spalte Wert1 hat falschen Typ (nicht numerisch) >> Ressourcenparameter " + IDParameter + " für Ressource " + IDRessource + " nicht eingelesen");
+                                                continue;
+                                            }
                                             if (cell.getCellType().equals(CellType.NUMERIC)) {
                                                 DWert1 = cell.getNumericCellValue();
                                             } else {
@@ -993,7 +997,7 @@ public class Projekt {
                                                     return;
                                                 }
                                                 cell = row.getCell(idx_wert2);
-                                                if (cell != null) {
+                                                if (cell == null) {
                                                     PWriter.println("  ++FEHLER++ Spalte Wert2 hat falschen Typ (nicht numerisch) >> Ressourcenparameter " + IDParameter + " für Ressource " + IDRessource + " nicht eingelesen");
                                                     continue;
                                                 }
